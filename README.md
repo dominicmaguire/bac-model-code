@@ -118,4 +118,80 @@ The network predicts for three classes: BAC, background and breast tissue:
 | ---------------------- | ---------------------- |
 | ![Test Image](testImage.png) | ![Segmented Test Image](segmentedTestImage.png) |
 
+## Object Detection
+
+The dataset used in our study came in four different sizes so all images were cropped as above and padded with zeros using [Pillow](https://pypi.org/project/Pillow/) to a size of 4140x3372. The code below is modified to pad one image, `croppedImage1-1.png`:
+
+````python
+from PIL import Image
+import os
+
+maxHeight = 4140
+maxWidth = 3372
+colour = 0
+
+def add_margin(pil_img, top, right, bottom, left, colour):
+    width, height = pil_img.size
+    new_width = width + right + left
+    new_height = height + top + bottom
+    result = Image.new(pil_img.mode, (new_width, new_height), colour)
+    result.paste(pil_img, (left, top))
+    return result
+
+new_path = 'C:\\Users\\user\\Desktop'
+files = []
+# r=root, d=directories, f = files.
+for r, d, f in os.walk(new_path):
+    for file in f:
+        if file.endswith('croppedImage1-1.png'):
+            im = Image.open(os.path.join(r, file))
+            width, height = im.size;
+            if width % 2 != 0:
+                width_padding = maxWidth - width
+                left = int((width_padding - 1)/2)
+                right = left + 1
+            else:
+                width_padding = maxWidth - width
+                left = int(width_padding/2)
+                right = left
+            if height % 2 != 0:
+                height_padding = maxHeight - height
+                top = int((height_padding - 1)/2)
+                bottom = top + 1
+            else:
+                height_padding = maxHeight - height
+                top = int(height_padding/2)
+                bottom = top
+            print('Adding margin...')
+            im_new = add_margin(im, top, right, bottom, left, colour)
+            print('Added margin...')
+            print('Saving image...')
+            im_new.save('C:\\Users\\user\\Desktop\\' + str(file).replace('cropped', 'paddedCropped'),
+                        quality=100)
+            print('Image saved...')
+````
+Images were reduced to 70% size due to "out of memory" errors on the GPU. A trained yolov4ObjectDetector is provided. The detector performed poorly with detections only occurring at low thresholds, i.e. 0.001:
+
+````MATLAB
+% load trainedDetector
+load("yolov470epochs.mat");
+
+% read and resize image
+I = imread("paddedCroppedImage1-1.png");
+
+I = imresize(I, [2898 2360]);
+figure
+imshow(I)
+
+% run object detector
+[bboxes,scores,labels] = detect(trainedDetector, I, 'Threshold', 0.001);
+
+% view results
+I = insertObjectAnnotation(I,"rectangle",bboxes,scores);
+figure
+imshow(I)
+````
+|Resized Image           | Prediction            |
+| ---------------------- | ---------------------- |
+| ![Resized Image](testImage.png) | ![Object Detection Image](segmentedTestImage.png) |
 
