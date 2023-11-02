@@ -51,7 +51,7 @@ single_crop.crop_single_mammogram(os.path.join(r, file), # input mammogram_path
 | ---------------------- | ---------------------- |
 | ![Converted Test Image](1-1.png) | ![Cropped Test Image](croppedImage1-1.png) |
 
-## Segmentation
+## BAC Segmentation
 
 To try the segmentation network, run the MATLAB live script to create the layer graph, `lgraph`. Assemble the network from the pre-trained layers:
 ````MATLAB
@@ -118,7 +118,7 @@ The network predicts for three classes: BAC, background and breast tissue:
 | ---------------------- | ---------------------- |
 | ![Test Image](testImage.png) | ![Segmented Test Image](segmentedTestImage.png) |
 
-## Object Detection
+## BAC Object Detection
 
 The dataset used in our study came in four different sizes so all images were cropped as above and padded with zeros using [Pillow](https://pypi.org/project/Pillow/) to a size of 4140x3372. The code below is modified to pad one image, `croppedImage1-1.png`:
 
@@ -193,5 +193,8 @@ imshow(I)
 ````
 |Resized Image           | Prediction            |
 | ---------------------- | ---------------------- |
-| ![Resized Image](testImage.png) | ![Object Detection Image](segmentedTestImage.png) |
+| ![Resized Image](resized70.png) | ![Object Detection Image](objectDetection.png) |
+
+## BAC Classification
+
 
