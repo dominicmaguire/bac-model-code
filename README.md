@@ -53,7 +53,7 @@ single_crop.crop_single_mammogram(os.path.join(r, file), # input mammogram_path
 
 ## BAC Segmentation
 
-To try the segmentation network, run the MATLAB live script to create the layer graph, `lgraph`. Assemble the network from the pre-trained layers:
+To try the segmentation network, run the MATLAB live script `DeepLabv3PlusResNet18TrainedNetworkWithInitialParameters.mlx` to create the layer graph, `lgraph`. Assemble the network from the pre-trained layers:
 ````MATLAB
 net = assembleNetwork(lgraph);
 ````
@@ -65,7 +65,7 @@ rgbImage = cat(3, grayImage, grayImage, grayImage);
 
 imwrite(rgbImage, strrep(imagePath,'.png','.tif'),"tif");
 ````
-Read in the cropped tif and apply the segmentation network:
+Read in the cropped tif and apply the segmentation network. 512x512 patches are used:
 ````MATLAB
 im = imread('croppedImage1-1.tif');
 figure
@@ -196,5 +196,52 @@ imshow(I)
 | ![Resized Image](resized70.png) | ![Object Detection Image](objectDetection.png) |
 
 ## BAC Classification
+To try the classification network, run the MATLAB live script `ResNet22TrainedNetworkWithInitialParametersUpdated.mlx` to create the layer graph, `lgraph`. Assemble the network from the pre-trained layers:
+````MATLAB
+net = assembleNetwork(lgraph);
+````
+For the classifier, images were also reduced to 70% size due to "out of memory" errors on the GPU.
+````MATLAB
+% read and resize image
+I = imread("paddedCroppedImage1-1.png");
+
+I = imresize(I, [2898 2360]);
+figure
+imshow(I)
+````
+The classification model classifies whole images as 'BAC' or 'NON_BAC':
+````MATLAB
+>> net.Layers
+
+ans = 
+
+  85×1 Layer array with layers:
+
+     1   'Image_input_1'           Image Input             2898×2360×1 images with 'zerocenter' normalization
+    ...
+    85   'classoutput'             Classification Output   crossentropyex with classes 'BAC' and 'NON_BAC'
+````
+Run the model on the demo image and view the results. The model correctly classifies the demo image as BAC+ve:
+````MATLAB
+[Y, scores] = classify(net, I);
+
+>> Y
+
+Y = 
+
+  categorical
+
+     BAC
+
+>> scores
+
+scores =
+
+  1×2 single row vector
+
+    1.0000    0.0000
+````
+
+
 
 
