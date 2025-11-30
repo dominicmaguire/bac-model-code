@@ -2,6 +2,8 @@
 
 Trained models with initial parameters for classification, object detection and segmentation of breast arterial calcification on FFDM mammograms. Provided as MATLAB live scripts. The accompanying MATLAB code used to train the models is also included.
 
+**Update:** [Our paper](https://doi.org/10.1111/exsy.70069) based on my PhD work was published in Expert Systems in May 2025.
+
 ## Pre-processing
 
 Images were pre-processed for the three models which entailed converting the DICOM images into 16-bit pngs and, for classification and object detection, cropping the images to the breast. For both steps we used code made available by [another study](https://github.com/nyukat/breast_cancer_classifier).
