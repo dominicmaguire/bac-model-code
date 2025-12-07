@@ -4,6 +4,8 @@ Trained models with initial parameters for classification, object detection and 
 
 **Update:** [Our paper](https://doi.org/10.1111/exsy.70069) based on my PhD work was published in Expert Systems in May 2025.
 
+Maguire, D., Thompson, J.D., Vadera, S. and Szczepura, K. (2025), Approaches to Automatic Classification, Detection and Segmentation of Breast Arterial Calcification Using Deep Learning. Expert Systems, 42: e70069. [https://doi.org/10.1111/exsy.70069](https://doi.org/10.1111/exsy.70069)
+
 ## Pre-processing
 
 Images were pre-processed for the three models which entailed converting the DICOM images into 16-bit pngs and, for classification and object detection, cropping the images to the breast. For both steps we used code made available by [another study](https://github.com/nyukat/breast_cancer_classifier).
